@@ -7,11 +7,15 @@ const config = {
   type: Phaser.AUTO,
   parent: "phaser-example",
   width: 320 ,
-  height: 600,
+  height: 550,
+  scale: {
+    mode: Phaser.Scale.ENVELOP,
+    autoCenter: Phaser.Scale.CENTER_BOTH
+  },
   physics: {
     default: 'arcade',
     arcade: {
-      gravity: { y: 200 },
+      gravity: { y: 1200 },
       enableBody: true,
     }
   },
