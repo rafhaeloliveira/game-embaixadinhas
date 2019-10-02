@@ -21,13 +21,10 @@ class GameScene extends Phaser.Scene {
         this.load.image('background', BackgroundImg);
         this.load.image('ball', BallImg);
         this.load.image('platform', Platform);
+        this.load.bitmapFont('myFont', './../assets/fonts/myFont2_0.png', './../assets/fonts/myFont2.xml');
     };
 
-    playGame(){
-
-    }
-
-    create(){        
+    create(){
         this.add.image(width, height, 'background').setOrigin(1, 1.05);
 
         gameState.ball = this.physics.add.image(width/2, height-200, 'ball').setScale(0.25);
@@ -36,12 +33,16 @@ class GameScene extends Phaser.Scene {
         gameState.ball.setBounce(.5, .8);
         gameState.ball.setCollideWorldBounds(true);
         gameState.ball.setInteractive();
+        
+        this.physics.pause();
 
         gameState.platforms = this.physics.add.staticGroup();
         gameState.platforms.create(160, height-10, 'platform');
 
-        // this.physics.add.collider(gameState.ball, gameState.platforms);
+        // Inicia a física do jogo
+        this.input.on('pointerdown', () => { this.physics.resume() });
 
+        // Clique e pontuação
         gameState.ball.on('pointerdown', (pointer, localX, localY) => {
             let diff = 0;
 
@@ -63,11 +64,13 @@ class GameScene extends Phaser.Scene {
         });
 
         this.physics.add.collider(gameState.ball, gameState.platforms, () => {
-            this.scene.start('GameOverScene');
+            gameState.score = 0;
+            this.scene.restart();
         });
 
         // Score
         gameState.scoreText = this.add.text(170, 10, 'Score: 0', {fontSize: '28px', fill: '#FFFFFF'});
+        gameState.scoreText = this.add.bitmapText(this.physics.world.centerX, 50, 'myFont', '0', 128);
     };
 
     update(){
