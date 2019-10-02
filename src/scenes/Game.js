@@ -5,16 +5,15 @@ import { timingSafeEqual } from 'crypto';
 
 const gameState = { score: 0 };
 
+const width = window.innerWidth;
+const height = window.innerHeight;
+
 class GameScene extends Phaser.Scene {
     constructor(){
         super({
             key: 'GameScene'
         });
     }
-
-    hitBall(){
-
-    };
 
     init(){};
 
@@ -24,15 +23,24 @@ class GameScene extends Phaser.Scene {
         this.load.image('platform', Platform);
     };
 
-    create(){        
-        this.add.image(320, 768, 'background').setOrigin(1, 1);
+    playGame(){
 
-        gameState.ball = this.physics.add.image(100, 100, 'ball').setScale(0.15);
+    }
+
+    create(){        
+        this.add.image(width, height, 'background').setOrigin(1, 1.05);
+
+        gameState.ball = this.physics.add.image(width/2, height-200, 'ball').setScale(0.25);
         gameState.ball.setOrigin(0.5, 0);
         gameState.ball.setVelocity(0, 60);
         gameState.ball.setBounce(.5, .8);
         gameState.ball.setCollideWorldBounds(true);
         gameState.ball.setInteractive();
+
+        gameState.platforms = this.physics.add.staticGroup();
+        gameState.platforms.create(160, height-10, 'platform');
+
+        // this.physics.add.collider(gameState.ball, gameState.platforms);
 
         gameState.ball.on('pointerdown', (pointer, localX, localY) => {
             let diff = 0;
@@ -52,21 +60,10 @@ class GameScene extends Phaser.Scene {
             gameState.score += 1;
 
             gameState.scoreText.setText(`Score: ${gameState.score}`);
-        })
-
-        gameState.platforms = this.physics.add.staticGroup();
-        gameState.platforms.create(160, 565, 'platform');
+        });
 
         this.physics.add.collider(gameState.ball, gameState.platforms, () => {
-            this.physics.pause();
-            this.add.text(80, 200, 'Game Over', { fontSize: '28px', fill: '#FFFFFF'});
-            this.add.text(80, 230, 'Toque a tela', { fontSize: '21px', fill: '#FFFFFF'});
-            this.add.text(70, 250, 'para reiniciar', { fontSize: '21px', fill: '#FFFFFF'});
-
-            this.input.on('pointerup', () => {
-                gameState.score = 0;
-                this.scene.restart();
-            });
+            this.scene.start('GameOverScene');
         });
 
         // Score

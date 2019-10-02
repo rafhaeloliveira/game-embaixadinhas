@@ -1,17 +1,14 @@
 import Phaser from "phaser";
-import logoImg from "./assets/logo.png";
 
 import GameScene from './scenes/Game';
+import StartScene from "./scenes/Start";
+import GameOverScene from "./scenes/GameOver";
 
 const config = {
   type: Phaser.AUTO,
   parent: "phaser-example",
-  width: 320 ,
-  height: 550,
-  scale: {
-    mode: Phaser.Scale.ENVELOP,
-    autoCenter: Phaser.Scale.CENTER_BOTH
-  },
+  width: window.innerWidth ,
+  height: window.innerHeight,
   physics: {
     default: 'arcade',
     arcade: {
@@ -20,7 +17,9 @@ const config = {
     }
   },
   scene: [
-    GameScene
+    StartScene,
+    GameScene,
+    GameOverScene
   ]
 };
 
