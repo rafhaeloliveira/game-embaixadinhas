@@ -1,7 +1,8 @@
 import BackgroundImg from './../assets/background.jpg';
 import BallImg from './../assets/bola.png';
 import Platform from './../assets/platform.png';
-import { timingSafeEqual } from 'crypto';
+import BounceSound1 from './../assets/sounds/bounce_ball_1.mp3';
+import BounceSound2 from './../assets/sounds/bounce_ball_2.mp3';
 
 const gameState = { score: 0 };
 
@@ -21,8 +22,24 @@ class GameScene extends Phaser.Scene {
         this.load.image('background', BackgroundImg);
         this.load.image('ball', BallImg);
         this.load.image('platform', Platform);
-        this.load.bitmapFont('myFont', './../assets/fonts/myFont2_0.png', './../assets/fonts/myFont2.xml');
+
+        this.load.audio('sound1', BounceSound1);
+        this.load.audio('sound2', BounceSound2);
     };
+
+    randomBounceSound() {
+        let sound;
+
+        if(Math.floor(Math.random() * (2 - 1 + 1) + 1) > 1){
+            sound = 'sound1';
+        } else {
+            sound = 'sound2';
+        }
+
+        console.log(sound);
+
+        return sound;
+    }
 
     create(){
         this.add.image(width, height, 'background').setOrigin(1, 1.05);
@@ -61,6 +78,8 @@ class GameScene extends Phaser.Scene {
             gameState.score += 1;
 
             gameState.scoreText.setText(`Score: ${gameState.score}`);
+
+            this.sound.play(this.randomBounceSound())
         });
 
         this.physics.add.collider(gameState.ball, gameState.platforms, () => {
@@ -70,7 +89,6 @@ class GameScene extends Phaser.Scene {
 
         // Score
         gameState.scoreText = this.add.text(170, 10, 'Score: 0', {fontSize: '28px', fill: '#FFFFFF'});
-        gameState.scoreText = this.add.bitmapText(this.physics.world.centerX, 50, 'myFont', '0', 128);
     };
 
     update(){
