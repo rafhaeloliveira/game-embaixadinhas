@@ -36,8 +36,6 @@ class GameScene extends Phaser.Scene {
             sound = 'sound2';
         }
 
-        console.log(sound);
-
         return sound;
     }
 
