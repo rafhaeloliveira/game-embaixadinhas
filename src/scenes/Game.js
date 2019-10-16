@@ -4,6 +4,8 @@ import Platform from './../assets/platform.png';
 import BounceSound1 from './../assets/sounds/bounce_ball_1.mp3';
 import BounceSound2 from './../assets/sounds/bounce_ball_2.mp3';
 
+import OrangeButtons from './../assets/button_orange.png';
+
 const gameState = { score: 0 };
 
 const width = window.innerWidth;
@@ -25,6 +27,8 @@ class GameScene extends Phaser.Scene {
 
         this.load.audio('sound1', BounceSound1);
         this.load.audio('sound2', BounceSound2);
+
+        this.load.spritesheet('orange_buttons', OrangeButtons, { frameWidth: 256.7, frameHeight: 256}); 
     };
 
     randomBounceSound() {
@@ -40,9 +44,9 @@ class GameScene extends Phaser.Scene {
     }
 
     create(){
-        this.add.image(width, height, 'background').setOrigin(1, 1.05);
+        this.add.image(width, height, 'background').setOrigin(.5, .9).setScale(.6);
 
-        gameState.ball = this.physics.add.image(width/2, height-200, 'ball').setScale(0.25);
+        gameState.ball = this.physics.add.image(width/2, height-120, 'ball').setScale(0.25);
         gameState.ball.setOrigin(0.5, 0);
         gameState.ball.setVelocity(0, 60);
         gameState.ball.setBounce(.5, .8);
@@ -52,7 +56,7 @@ class GameScene extends Phaser.Scene {
         this.physics.pause();
 
         gameState.platforms = this.physics.add.staticGroup();
-        gameState.platforms.create(160, height-10, 'platform');
+        gameState.platforms.create(160, height + 25, 'platform');
 
         // Inicia a física do jogo
         this.input.on('pointerdown', () => { this.physics.resume() });
@@ -87,6 +91,17 @@ class GameScene extends Phaser.Scene {
 
         // Score
         gameState.scoreText = this.add.text(170, 10, 'Score: 0', {fontSize: '28px', fill: '#FFFFFF'});
+
+        // Controlls
+        const pauseBtn = this.add.sprite(30, 30, 'orange_buttons', 6).setScale(.2);
+        pauseBtn.setInteractive();
+        pauseBtn.on('pointerdown', (pointer) => {
+            this.time.addEvent({
+                delay: 100,
+                callback: () => {this.scene.start('MainMenu'); this.scene.pause()},
+                loop: false
+            })
+        });
     };
 
     update(){

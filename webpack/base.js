@@ -41,7 +41,7 @@ module.exports = {
     historyApiFallback: true,
     host: '0.0.0.0',
     hot: true,
-    port: 3000,
+    port: 3001,
     compress: true,
     publicPath: '/',
     stats: 'minimal',
