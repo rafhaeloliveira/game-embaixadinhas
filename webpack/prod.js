@@ -6,7 +6,7 @@ const TerserPlugin = require("terser-webpack-plugin");
 module.exports = merge(base, {
   mode: "production",
   output: {
-    path: path.resolve(__dirname, 'www/game1/www'),
+    path: path.resolve(__dirname, './../www'),
     filename: "bundle.min.js",
     hotUpdateChunkFilename: 'hot/hot-update.ts',
     hotUpdateMainFilename: 'hot/hot-update.json'
